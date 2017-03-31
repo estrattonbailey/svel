@@ -10,14 +10,18 @@ npm i svel --save
 
 ## Usage 
 ### svel(scrollY, scrollEvent[, config])
-Where `scrollY` is `window.scrollY || window.pageYOffset`, `scrollEvent` is the native event emitted by `window.onscroll`, and `config` is an optional config object. Default config: `{ pool: 10, interval: 100 }`.
+Where `scrollY` is `window.scrollY || window.pageYOffset`, `scrollEvent` is the native event emitted by `window.onscroll`, and `config` is an optional config object. Default config: `{ pool: 10, interval: 100, reset: 50 }`.
 
 Basic example:
 ```javascript
 import svel from 'svel'
 
 window.addEventListener('scroll', event => {
-  const speed = svel(window.scrollY, event)
+  const speed = svel(window.scrollY, event, {
+    pool: 20,
+    interval: 100,
+    reset: 100
+  })
 
   console.log(speed > 50 ? 'fast!' : 'slow')
 })

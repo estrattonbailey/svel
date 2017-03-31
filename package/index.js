@@ -3,6 +3,7 @@ let prevtime = 0
 let distance = 0
 let prevscroll = null
 let pool = []
+let timeout = null
 
 export default (y, event = { timeStamp: 0 }, config = {}) => {
   let total = 0
@@ -14,7 +15,8 @@ export default (y, event = { timeStamp: 0 }, config = {}) => {
   prevscroll = y
   prevtime = event.timeStamp
 
-  pool.push(distance/(time * (1 / (config.interval || 100))))
+  pool.push(distance / (time * (1 / (config.interval || 100))))
+
   if (pool.length > (config.pool || 10)) pool.shift()
 
   for (let i = 0; i < pool.length; i++) {
@@ -22,5 +24,14 @@ export default (y, event = { timeStamp: 0 }, config = {}) => {
 
     return total / (i + 1)
   }
-}
 
+  timeout = setTimeout(() => {
+    time = 0
+    prevtime = 0
+    distance = 0
+    prevscroll = 0
+    pool = []
+  }, config.reset || 50)
+
+  timeout && clearTimeout(timeout)
+}
