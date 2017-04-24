@@ -5,6 +5,14 @@ let prevscroll = null
 let pool = []
 let timeout = null
 
+const flush = () => {
+  time = 0
+  prevtime = 0
+  distance = 0
+  prevscroll = 0
+  pool = []
+}
+
 export default (y, event = { timeStamp: 0 }, config = {}) => {
   let total = 0
 
@@ -19,19 +27,21 @@ export default (y, event = { timeStamp: 0 }, config = {}) => {
 
   if (pool.length > (config.pool || 10)) pool.shift()
 
+  timeout = setTimeout(flush, config.reset || 50)
+
+  timeout && clearTimeout(timeout)
+
   for (let i = 0; i < pool.length; i++) {
     total = (pool[i] + total)
 
-    return total / (i + 1)
+    return {
+      velocity: total / (i + 1),
+      flush,
+    }
   }
 
-  timeout = setTimeout(() => {
-    time = 0
-    prevtime = 0
-    distance = 0
-    prevscroll = 0
-    pool = []
-  }, config.reset || 50)
-
-  timeout && clearTimeout(timeout)
+  return {
+    velocity: 0,
+    flush,
+  }
 }
