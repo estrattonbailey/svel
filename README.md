@@ -1,3 +1,5 @@
+**Attention: this lib isn't very functional at the moment, I don't recommend using it.**
+
 # svel
 Calculate velocity over an interval for scroll or resize events.
 
